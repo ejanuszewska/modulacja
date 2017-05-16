@@ -12,7 +12,7 @@ int modulateI(uint8_t signal){
   else if(signal == 1){
     return -1;
   }
-  else if(signal == 10){
+  else if(signal == 2){
     return 3;
   } else{
   return 1;
@@ -25,7 +25,7 @@ int modulateQ(uint8_t signal){
   }
   else if(signal == 1){
     return 1;
-  }else if(signal == 10){
+  }else if(signal == 2){
     return -3;
   }else{
     return -1;
@@ -39,11 +39,9 @@ uint8_t dividedSignal[SIGNAL_LENGTH * 2];
 int j=0;
 
 for(int i=0; i<SIGNAL_LENGTH; i++){
-//  strncpy(dividedSignal[j], inputSignal[i], 2);
   dividedSignal[j] = inputSignal[i] >> 2;
   modulatedSignal[j] = modulateI(dividedSignal[j]);
   j++;   
-//  strncpy(dividedSignal[j], inputSignal[i] + 2, 2);
   dividedSignal[j] = inputSignal[i] & 0x3;
   modulatedSignal[j] = modulateQ(dividedSignal[j]);
   j++;
@@ -60,23 +58,26 @@ for(int i=0; i< SIGNAL_LENGTH * 2; i++){
 
 int n = SIGNAL_LENGTH;
 int m, w, wm, t, u, b;
-int nn = (n*2) <<1;
+int nn = (n*2);
 int a = 0;
 
-for(int i = 1; i < nn; i++){
-  if (j > i){
-    SWAP(modulatedSignal[a - 1], modulatedSignal[i - 1]);
-    SWAP(modulatedSignal[a], modulatedSignal[i]);
+for(int i = 0; i < (nn); i+=2){
+  if (a > i){
+    SWAP(modulatedSignal[a], modulatedSignal[a]);
+    SWAP(modulatedSignal[a+1], modulatedSignal[i+1]);
  }
   b = n;
-  while (b >= 2 && j > b){
-    j -= b;
-    b >>= 1;
+  while (b >= 2 && a > b){
+    a -= b;
+    b = b/2;
   }  
-  j += m;
+  a += b;
 }
-
-for(int i = 0; i <= log(n); i++){
+printf("po zamianie\n");
+for(int i=0;i<n*2;i++){
+printf("%d\n", modulatedSignal[i]);
+}
+for(int i = 1; i <= log(n); i++){
   m = pow(2, i);
   wm = exp((-2 * 3.14 * i)/m);
     for(int k = 0; k<= n-1; k+=m){
@@ -90,7 +91,7 @@ for(int i = 0; i <= log(n); i++){
          }
       }   
    }
-printf("po modulacji");
+printf("po fft");
 for (int i=0;i<n*2;i++){
 printf("%d\n", modulatedSignal[i]);
 }
