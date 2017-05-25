@@ -48,7 +48,7 @@ int modulateQ(uint8_t signal){
 int main(int argc, char **argv){
 
 int modulatedSignalRe[SIGNAL_LENGTH], modulatedSignalIm[SIGNAL_LENGTH];
-uint8_t  inputSignal[SIGNAL_LENGTH] = {4, 3, 6, 0};
+uint8_t  inputSignal[SIGNAL_LENGTH] = {1, 2, 3, 4};
 uint8_t dividedSignal[SIGNAL_LENGTH * 2];
 int j=0;
 
@@ -81,20 +81,44 @@ for(unsigned int i=0;i<n;i++){
 	modulatedSignalComplex[i] = modulatedSignalRe[rev] + modulatedSignalIm[rev] * I;
 }
 
-for(int i = 1; i <= log(n); i++){
+/*for(int i = 1; i < log2(n); i++){
   m = pow(2, i);
-  wm = exp((-2 * 3.14 * i)/m);
-    for(int k = 0; k<= n-1; k+=m){
+  wm = exp((-2 * M_PI * I)/m);
+    for(int k = 0; k<= n; k+=m){
       w = 1;
-        for(int j=0; j<= (m/2)-1; j++){
-          t = w * modulatedSignalComplex[k + j + (m/2)];
-          u = modulatedSignalComplex[k + j];
-          modulatedSignalComplex[k + j] = u + t;
-          modulatedSignalComplex[k + j + (m/2)] = u - t;
+        for(int l=0; l<= (m/2) -1; l++){
+          t = w * modulatedSignalComplex[k + l + (m/2)];
+          u = modulatedSignalComplex[k + l];
+          modulatedSignalComplex[k + l] = u + t;
+          modulatedSignalComplex[k + l + (m/2)] = u - t;
           w = w * wm;
          }
       }   
-   }
+   }*/
+double complex W[n/2];
+W[1] = 1.* cos(-2 * M_PI / n) + I * 1. * sin(-2 * M_PI /n); 
+W[0] = 1;
+for(int i=2; i< n/2; i++){
+W[i] = pow(W[1], i);
+}
+int n2=1;
+int a = n/2;
+for(int j = 0; j < log2(n); j++){
+//  m = pow(2, i);
+//  wm = exp((-2 * M_PI * I)/m);
+    for(int i = 0; i< n; i++){
+	if(!(i & n2)){
+	
+          t = modulatedSignalComplex[i];
+          u = W[(i*2) % (n2 * a)] * modulatedSignalComplex[i+n2];
+          modulatedSignalComplex[i] = u + t;
+          modulatedSignalComplex[i+n2] = t - u;
+         }
+      }   
+n2 *= 2;
+a = a/2;
+}
+
 printf("po fft");
 
 for (int i=0;i<n;i++){
