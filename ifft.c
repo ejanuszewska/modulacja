@@ -48,7 +48,7 @@ int modulateQ(uint8_t signal){
 int main(int argc, char **argv){
 
 int modulatedSignalRe[SIGNAL_LENGTH], modulatedSignalIm[SIGNAL_LENGTH];
-uint8_t  inputSignal[SIGNAL_LENGTH] = {11, 3, 6, 0};
+uint8_t  inputSignal[SIGNAL_LENGTH] = {4, 3, 6, 0};
 uint8_t dividedSignal[SIGNAL_LENGTH * 2];
 int j=0;
 
@@ -72,9 +72,9 @@ for(int i=0; i< SIGNAL_LENGTH; i++){
 
 
 int n = SIGNAL_LENGTH;
-int m, t;
-double u, b, w, wm;
-double complex modulatedSignalComplex[4];
+int m;
+double b, w, wm;
+double complex modulatedSignalComplex[4], t, u;
 
 for(unsigned int i=0;i<n;i++){
 	int rev = bitrev(i,2);
